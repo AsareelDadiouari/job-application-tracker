@@ -1,0 +1,37 @@
+<form class="add" (ngSubmit)="add()">
+  <input name="company" placeholder="Company" [(ngModel)]="company" required />
+  <input name="position" placeholder="Position" [(ngModel)]="position" required />
+  <button type="submit">Add application</button>
+</form>
+
+@if (applications.error()) {
+  <p class="error">Could not reach the API. Is it running?</p>
+}
+
+<div class="board">
+  @for (column of columns(); track column.status) {
+    <section class="column">
+      <h2>{{ labels[column.status] }} <span>{{ column.items.length }}</span></h2>
+      @for (application of column.items; track application.id) {
+        <article class="card">
+          <strong>{{ application.company }}</strong>
+          <p>{{ application.position }}</p>
+          <div class="actions">
+            <select
+              [ngModel]="application.status"
+              (ngModelChange)="move(application, $event)"
+              [attr.aria-label]="'Status for ' + application.company"
+            >
+              @for (status of statuses; track status) {
+                <option [value]="status">{{ labels[status] }}</option>
+              }
+            </select>
+            <button type="button" (click)="remove(application)">Delete</button>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">Nothing here yet</p>
+      }
+    </section>
+  }
+</div>
