@@ -8,6 +8,8 @@ import { STATUS_META } from './status';
 export interface ApplicationDialogData {
   application?: JobApplication;
   status?: ApplicationStatus;
+  resumeVersions?: string[];
+  coverLetterVersions?: string[];
 }
 
 export type ApplicationDialogResult = { action: 'save'; request: ApplicationRequest } | { action: 'delete' };
@@ -38,6 +40,8 @@ export class ApplicationDialog {
   protected readonly contactName = signal(this.data.application?.contactName ?? '');
   protected readonly contactEmail = signal(this.data.application?.contactEmail ?? '');
   protected readonly contactRole = signal(this.data.application?.contactRole ?? '');
+  protected readonly resumeVersion = signal(this.data.application?.resumeVersion ?? '');
+  protected readonly coverLetterVersion = signal(this.data.application?.coverLetterVersion ?? '');
   protected readonly notes = signal(this.data.application?.notes ?? '');
   protected readonly confirmingDelete = signal(false);
 
@@ -79,6 +83,8 @@ export class ApplicationDialog {
         contactName: this.contactName().trim() || null,
         contactEmail: this.contactEmail().trim() || null,
         contactRole: this.contactRole().trim() || null,
+        resumeVersion: this.resumeVersion().trim() || null,
+        coverLetterVersion: this.coverLetterVersion().trim() || null,
         notes: this.notes().trim() || null,
       },
     });

@@ -18,6 +18,8 @@ describe('ApplicationsBoard', () => {
       contactName: 'Sarah Jenkins',
       contactEmail: 'sarah@globex.example',
       contactRole: 'Technical Recruiter',
+      resumeVersion: 'Backend-v3-EN.pdf',
+      coverLetterVersion: 'Globex-Cover.pdf',
       createdAt: '2026-10-25T10:00:00Z',
       updatedAt: '2026-10-25T10:00:00Z',
     },
@@ -34,6 +36,8 @@ describe('ApplicationsBoard', () => {
       contactName: null,
       contactEmail: null,
       contactRole: null,
+      resumeVersion: null,
+      coverLetterVersion: null,
       createdAt: '2026-10-28T10:00:00Z',
       updatedAt: '2026-10-28T10:00:00Z',
     },
@@ -69,6 +73,8 @@ describe('ApplicationsBoard', () => {
     expect(text).toContain('Follow-up reminders');
     expect(text).toContain('Send thank-you note to Sarah');
     expect(text).toContain('Sarah Jenkins');
+    expect(text).toContain('Backend-v3-EN.pdf');
+    expect(text).toContain('Globex-Cover.pdf');
   });
 
   it('clears follow-up reminder when marked done', async () => {

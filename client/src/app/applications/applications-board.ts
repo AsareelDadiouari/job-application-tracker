@@ -81,6 +81,26 @@ export class ApplicationsBoard {
     this.all().filter((a) => !!(a.contactName || a.contactEmail)).length,
   );
 
+  protected readonly resumeVersions = computed(() =>
+    Array.from(
+      new Set(
+        this.all()
+          .map((a) => a.resumeVersion?.trim())
+          .filter((v): v is string => !!v),
+      ),
+    ),
+  );
+
+  protected readonly coverLetterVersions = computed(() =>
+    Array.from(
+      new Set(
+        this.all()
+          .map((a) => a.coverLetterVersion?.trim())
+          .filter((v): v is string => !!v),
+      ),
+    ),
+  );
+
   protected readonly columns = computed(() => {
     const term = this.search().trim().toLowerCase();
     const activeFilter = this.filter();
@@ -96,6 +116,8 @@ export class ApplicationsBoard {
         a.contactRole ?? '',
         a.contactEmail ?? '',
         a.followUpNote ?? '',
+        a.resumeVersion ?? '',
+        a.coverLetterVersion ?? '',
       ]
         .join(' ')
         .toLowerCase();
@@ -167,7 +189,11 @@ export class ApplicationsBoard {
 
   protected open(data: ApplicationDialogData = {}) {
     const ref = this.dialog.open<ApplicationDialogResult, ApplicationDialogData>(ApplicationDialog, {
-      data,
+      data: {
+        ...data,
+        resumeVersions: this.resumeVersions(),
+        coverLetterVersions: this.coverLetterVersions(),
+      },
       backdropClass: 'cdk-overlay-dark-backdrop',
     });
 
