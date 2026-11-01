@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { I18nService } from '../shared/i18n';
 import { Icon, IconName } from '../shared/icon';
 import { ApplicationDialog, ApplicationDialogData, ApplicationDialogResult } from './application-dialog';
 import {
@@ -58,6 +59,7 @@ function diffDays(dateIso: string, baseIso: string): number {
 export class ApplicationsBoard {
   private readonly service = inject(ApplicationsService);
   private readonly dialog = inject(Dialog);
+  protected readonly i18n = inject(I18nService);
 
   protected readonly meta = STATUS_META;
   protected readonly avatarGradient = avatarGradient;
@@ -130,6 +132,7 @@ export class ApplicationsBoard {
   });
 
   protected describeFollowUp(application: JobApplication, today = todayIso()): FollowUpItem {
+    const t = this.i18n.t().board;
     const dateIso = application.followUpOn ?? today;
     const days = diffDays(dateIso, today);
     if (days < 0) {
@@ -137,7 +140,7 @@ export class ApplicationsBoard {
       return {
         application,
         urgency: 'overdue',
-        label: overdueDays === 1 ? '1d overdue' : `${overdueDays}d overdue`,
+        label: t.overdueDays(overdueDays),
         badgeClass: 'border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-300',
       };
     }
@@ -145,14 +148,14 @@ export class ApplicationsBoard {
       return {
         application,
         urgency: 'today',
-        label: 'Due today',
+        label: t.dueToday,
         badgeClass: 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-300',
       };
     }
     return {
       application,
       urgency: 'upcoming',
-      label: days === 1 ? 'Tomorrow' : days <= 14 ? `In ${days}d` : dateIso,
+      label: days === 1 ? t.tomorrow : days <= 14 ? t.inDays(days) : dateIso,
       badgeClass: 'border-brand/30 bg-brand-soft text-brand',
     };
   }
@@ -174,16 +177,17 @@ export class ApplicationsBoard {
 
   protected readonly stats = computed<Stat[]>(() => {
     const all = this.all();
+    const s = this.i18n.t().board.stats;
     const count = (...statuses: ApplicationStatus[]) => all.filter((a) => statuses.includes(a.status)).length;
     const sent = count('Applied', 'Interview', 'Offer', 'Rejected');
     const responded = count('Interview', 'Offer');
     const rate = sent ? Math.round((responded / sent) * 100) : 0;
 
     return [
-      { label: 'Applications sent', value: `${sent}`, hint: `${count('ToApply')} still to apply`, icon: 'send', tone: 'text-sky-500 bg-sky-500/10' },
-      { label: 'Interviews', value: `${count('Interview')}`, hint: 'in progress', icon: 'messages', tone: 'text-amber-500 bg-amber-500/10' },
-      { label: 'Offers', value: `${count('Offer')}`, hint: count('Offer') ? 'congrats!' : 'keep going', icon: 'trophy', tone: 'text-emerald-500 bg-emerald-500/10' },
-      { label: 'Response rate', value: `${rate}%`, hint: 'interviews + offers', icon: 'trend', tone: 'text-brand bg-brand-soft' },
+      { label: s.sentLabel, value: `${sent}`, hint: s.sentHint(count('ToApply')), icon: 'send', tone: 'text-sky-500 bg-sky-500/10' },
+      { label: s.interviewsLabel, value: `${count('Interview')}`, hint: s.interviewsHint, icon: 'messages', tone: 'text-amber-500 bg-amber-500/10' },
+      { label: s.offersLabel, value: `${count('Offer')}`, hint: s.offersHint(count('Offer') > 0), icon: 'trophy', tone: 'text-emerald-500 bg-emerald-500/10' },
+      { label: s.responseRateLabel, value: `${rate}%`, hint: s.responseRateHint, icon: 'trend', tone: 'text-brand bg-brand-soft' },
     ];
   });
 

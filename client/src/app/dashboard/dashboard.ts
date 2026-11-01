@@ -9,6 +9,7 @@ import {
   JobApplication,
 } from '../applications/applications.service';
 import { avatarGradient, initials, STATUS_META } from '../applications/status';
+import { I18nService } from '../shared/i18n';
 import { Icon, IconName } from '../shared/icon';
 
 export interface StageBreakdown {
@@ -56,6 +57,7 @@ function daysSince(isoDateOrTimestamp: string, nowMs = Date.now()): number {
 })
 export class Dashboard {
   private readonly service = inject(ApplicationsService);
+  protected readonly i18n = inject(I18nService);
 
   protected readonly meta = STATUS_META;
   protected readonly avatarGradient = avatarGradient;
@@ -66,6 +68,7 @@ export class Dashboard {
 
   protected readonly kpis = computed<KpiCard[]>(() => {
     const all = this.all();
+    const k = this.i18n.t().dashboard.kpis;
     const count = (...statuses: ApplicationStatus[]) => all.filter((a) => statuses.includes(a.status)).length;
     const sent = count('Applied', 'Interview', 'Offer', 'Rejected');
     const interviewsOrOffers = count('Interview', 'Offer');
@@ -76,30 +79,30 @@ export class Dashboard {
 
     return [
       {
-        label: 'Total tracked',
+        label: k.totalLabel,
         value: `${all.length}`,
-        hint: `${sent} submitted · ${count('ToApply')} in wishlist`,
+        hint: k.totalHint(sent, count('ToApply')),
         icon: 'briefcase',
         tone: 'text-sky-500 bg-sky-500/10',
       },
       {
-        label: 'Response rate',
+        label: k.responseRateLabel,
         value: `${responseRate}%`,
-        hint: `${interviewsOrOffers} reached interview or offer`,
+        hint: k.responseRateHint(interviewsOrOffers),
         icon: 'trend',
         tone: 'text-brand bg-brand-soft',
       },
       {
-        label: 'Offer conversion',
+        label: k.offerConversionLabel,
         value: `${offerRate}%`,
-        hint: `${offers} offer${offers === 1 ? '' : 's'} from ${sent} sent`,
+        hint: k.offerConversionHint(offers, sent),
         icon: 'trophy',
         tone: 'text-emerald-500 bg-emerald-500/10',
       },
       {
-        label: 'Stalled applications',
+        label: k.stalledLabel,
         value: `${stalled}`,
-        hint: `14+ days without stage update`,
+        hint: k.stalledHint,
         icon: 'alert',
         tone: stalled > 0 ? 'text-amber-500 bg-amber-500/10' : 'text-slate-400 bg-slate-500/10',
       },
@@ -108,12 +111,13 @@ export class Dashboard {
 
   protected readonly stageBreakdown = computed<StageBreakdown[]>(() => {
     const all = this.all();
+    const stages = this.i18n.t().stages;
     const total = all.length || 1;
     return APPLICATION_STATUSES.map((status) => {
       const count = all.filter((a) => a.status === status).length;
       return {
         status,
-        label: STATUS_META[status].label,
+        label: stages[status],
         dot: STATUS_META[status].dot,
         count,
         percent: all.length ? Math.round((count / total) * 100) : 0,
@@ -140,6 +144,7 @@ export class Dashboard {
 
   protected readonly stalledApplications = computed<StalledApplication[]>(() => {
     const nowMs = Date.now();
+    const d = this.i18n.t().dashboard;
     return this.all()
       .filter((a) => a.status === 'Applied' || a.status === 'Interview')
       .map((application) => {
@@ -150,8 +155,8 @@ export class Dashboard {
         );
         const reason =
           application.status === 'Applied'
-            ? 'No recruiter response yet'
-            : 'In interview stage without recent update';
+            ? d.stalledReasonApplied
+            : d.stalledReasonInterview;
         return { application, daysStalled, reason };
       })
       .filter((item) => item.daysStalled >= STALL_THRESHOLD_DAYS)
