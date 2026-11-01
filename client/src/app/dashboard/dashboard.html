@@ -1,0 +1,186 @@
+<section class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight text-ink">{{ i18n.t().dashboard.title }}</h1>
+      <p class="mt-1 text-sm text-ink-muted">{{ i18n.t().dashboard.subtitle }}</p>
+    </div>
+    <a routerLink="/" class="btn btn-ghost border border-line">
+      <app-icon name="board" />
+      <span>{{ i18n.t().dashboard.backToBoard }}</span>
+    </a>
+  </div>
+
+  <!-- Top KPIs -->
+  <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+    @for (kpi of kpis(); track kpi.label) {
+      <div class="rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/[0.03]">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-ink-muted">{{ kpi.label }}</span>
+          <span class="grid size-8 place-items-center rounded-lg" [class]="kpi.tone">
+            <app-icon [name]="kpi.icon" />
+          </span>
+        </div>
+        <div class="mt-2 text-3xl font-semibold tracking-tight text-ink tabular-nums">{{ kpi.value }}</div>
+        <div class="mt-0.5 text-xs text-ink-faint">{{ kpi.hint }}</div>
+      </div>
+    }
+  </div>
+
+  <!-- Funnel & Conversion row -->
+  <div class="mt-6 grid gap-6 lg:grid-cols-5">
+    <!-- Stage Breakdown -->
+    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.stageDistributionTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.stageDistributionSubtitle }}</p>
+        </div>
+        <app-icon name="chart" [size]="18" />
+      </div>
+
+      <div class="mt-5 space-y-4">
+        @for (stage of stageBreakdown(); track stage.status) {
+          <div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2">
+                <span class="size-2.5 rounded-full" [class]="stage.dot"></span>
+                <span class="font-medium text-ink">{{ stage.label }}</span>
+              </div>
+              <div class="text-xs text-ink-muted tabular-nums">
+                <span class="font-semibold text-ink">{{ stage.count }}</span>
+                <span class="ml-1">({{ stage.percent }}%)</span>
+              </div>
+            </div>
+            <div class="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-surface-muted">
+              <div
+                class="h-full rounded-full transition-all duration-300"
+                [class]="stage.dot"
+                [style.width.%]="stage.percent"
+              ></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Funnel Conversion Rates -->
+    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-2">
+      <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.bottlenecksTitle }}</h2>
+      <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.bottlenecksSubtitle }}</p>
+
+      @let conv = conversions();
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.appliedToInterview }}</div>
+          <div class="mt-1 text-2xl font-semibold text-ink tabular-nums">{{ conv.appliedToInterview }}%</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.appliedToInterviewHint }}</div>
+        </div>
+        <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.interviewToOffer }}</div>
+          <div class="mt-1 text-2xl font-semibold text-emerald-500 tabular-nums">{{ conv.interviewToOffer }}%</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.interviewToOfferHint }}</div>
+        </div>
+        <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.awaitingReply }}</div>
+          <div class="mt-1 text-2xl font-semibold text-amber-500 tabular-nums">{{ conv.awaitingReplyRate }}%</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.awaitingReplyHint }}</div>
+        </div>
+        <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.rejectionRate }}</div>
+          <div class="mt-1 text-2xl font-semibold text-rose-500 tabular-nums">{{ conv.rejectionRate }}%</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.rejectionRateHint }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stalled Applications + Resume Performance -->
+  <div class="mt-6 grid gap-6 lg:grid-cols-5">
+    <!-- Stalled Applications -->
+    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.stalledTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.stalledSubtitle }}</p>
+        </div>
+        <span class="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-600 tabular-nums dark:text-amber-300">
+          {{ stalledApplications().length }}
+        </span>
+      </div>
+
+      <div class="mt-4 divide-y divide-line">
+        @for (item of stalledApplications(); track item.application.id) {
+          <div class="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+            <div class="flex min-w-0 items-center gap-3">
+              <div
+                class="grid size-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br text-xs font-semibold text-white"
+                [class]="avatarGradient(item.application.company)"
+              >
+                {{ initials(item.application.company) }}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="truncate text-sm font-semibold text-ink">{{ item.application.position }}</span>
+                  <span class="rounded-full bg-surface-muted px-2 py-0.5 text-[11px] font-medium text-ink-muted">
+                    {{ i18n.t().stages[item.application.status] }}
+                  </span>
+                </div>
+                <p class="truncate text-xs text-ink-muted">
+                  {{ item.application.company }} · {{ item.reason }}
+                  @if (item.application.contactName) {
+                    · {{ item.application.contactName }}
+                  }
+                </p>
+              </div>
+            </div>
+            <div class="shrink-0 text-right">
+              <span class="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-600 tabular-nums dark:text-amber-300">
+                {{ i18n.t().dashboard.stalledBadge(item.daysStalled) }}
+              </span>
+              @if (item.application.appliedOn) {
+                <div class="mt-1 text-[11px] text-ink-faint">
+                  {{ item.application.appliedOn | date: 'MMM d' }}
+                </div>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="rounded-xl border border-dashed border-line p-6 text-center text-xs text-ink-faint">
+            {{ i18n.t().dashboard.noStalled }}
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Resume Version Performance -->
+    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-2">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.resumeTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.resumeSubtitle }}</p>
+        </div>
+        <app-icon name="notes" [size]="18" />
+      </div>
+
+      <div class="mt-4 space-y-3">
+        @for (doc of resumePerformance(); track doc.version) {
+          <div class="rounded-xl border border-line bg-surface-muted/40 p-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="truncate text-sm font-medium text-ink">{{ doc.version }}</span>
+              <span class="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand tabular-nums">
+                {{ i18n.t().dashboard.responseBadge(doc.responseRate) }}
+              </span>
+            </div>
+            <div class="mt-1 text-xs text-ink-muted tabular-nums">
+              {{ i18n.t().dashboard.resumeSummary(doc.responded, doc.sent) }}
+            </div>
+          </div>
+        } @empty {
+          <div class="rounded-xl border border-dashed border-line p-6 text-center text-xs text-ink-faint">
+            {{ i18n.t().dashboard.noResumeData }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

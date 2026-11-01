@@ -23,6 +23,8 @@ public class JobApplication
     public string? ContactName { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactRole { get; set; }
+    public string? ResumeVersion { get; set; }
+    public string? CoverLetterVersion { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

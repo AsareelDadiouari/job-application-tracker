@@ -18,6 +18,8 @@ export interface JobApplication {
   contactName: string | null;
   contactEmail: string | null;
   contactRole: string | null;
+  resumeVersion: string | null;
+  coverLetterVersion: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +37,8 @@ export type ApplicationRequest = Pick<
   | 'contactName'
   | 'contactEmail'
   | 'contactRole'
+  | 'resumeVersion'
+  | 'coverLetterVersion'
 >;
 
 @Injectable({ providedIn: 'root' })

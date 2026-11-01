@@ -15,7 +15,9 @@ public record ApplicationRequest(
     [property: MaxLength(500)] string? FollowUpNote = null,
     [property: MaxLength(200)] string? ContactName = null,
     [property: MaxLength(320)] string? ContactEmail = null,
-    [property: MaxLength(200)] string? ContactRole = null);
+    [property: MaxLength(200)] string? ContactRole = null,
+    [property: MaxLength(200)] string? ResumeVersion = null,
+    [property: MaxLength(200)] string? CoverLetterVersion = null);
 
 public static class ApplicationEndpoints
 {
@@ -81,6 +83,8 @@ public static class ApplicationEndpoints
         application.ContactName = request.ContactName;
         application.ContactEmail = request.ContactEmail;
         application.ContactRole = request.ContactRole;
+        application.ResumeVersion = request.ResumeVersion;
+        application.CoverLetterVersion = request.CoverLetterVersion;
         application.UpdatedAt = now;
     }
 }

@@ -2,8 +2,8 @@
   <!-- Title + actions -->
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-semibold tracking-tight text-ink">Your pipeline</h1>
-      <p class="mt-1 text-sm text-ink-muted">Drag cards between stages. Click a card to edit it.</p>
+      <h1 class="text-2xl font-semibold tracking-tight text-ink">{{ i18n.t().board.title }}</h1>
+      <p class="mt-1 text-sm text-ink-muted">{{ i18n.t().board.subtitle }}</p>
     </div>
     <div class="flex w-full flex-wrap items-center gap-2 sm:w-auto">
       <div class="inline-flex rounded-xl border border-line bg-surface p-1 text-xs font-medium">
@@ -13,7 +13,7 @@
           [class]="filter() === 'all' ? 'bg-brand text-white' : 'text-ink-muted hover:text-ink'"
           (click)="filter.set('all')"
         >
-          All
+          {{ i18n.t().board.filterAll }}
         </button>
         <button
           type="button"
@@ -22,7 +22,7 @@
           (click)="filter.set('follow-ups')"
         >
           <app-icon name="bell" [size]="13" />
-          Follow-ups
+          {{ i18n.t().board.filterFollowUps }}
           @if (followUps().length) {
             <span class="rounded-full bg-black/10 px-1.5 py-0.2 text-[11px] tabular-nums dark:bg-white/15">
               {{ followUps().length }}
@@ -36,7 +36,7 @@
           (click)="filter.set('contacts')"
         >
           <app-icon name="user" [size]="13" />
-          Contacts
+          {{ i18n.t().board.filterContacts }}
           @if (contactsCount()) {
             <span class="rounded-full bg-black/10 px-1.5 py-0.2 text-[11px] tabular-nums dark:bg-white/15">
               {{ contactsCount() }}
@@ -49,12 +49,12 @@
         <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink-faint">
           <app-icon name="search" />
         </span>
-        <input class="field pl-9" type="search" placeholder="Search company, role, contact…"
-               aria-label="Search applications" [(ngModel)]="search" />
+        <input class="field pl-9" type="search" [placeholder]="i18n.t().board.searchPlaceholder"
+               [attr.aria-label]="i18n.t().board.searchPlaceholder" [(ngModel)]="search" />
       </label>
       <button type="button" class="btn btn-primary" (click)="open()">
         <app-icon name="plus" />
-        <span class="hidden sm:inline">New application</span>
+        <span class="hidden sm:inline">{{ i18n.t().board.newApplication }}</span>
       </button>
     </div>
   </div>
@@ -83,7 +83,7 @@
           <span class="grid size-7 place-items-center rounded-lg bg-amber-500/10 text-amber-500">
             <app-icon name="bell" [size]="15" />
           </span>
-          <h2 class="text-sm font-semibold text-ink">Follow-up reminders</h2>
+          <h2 class="text-sm font-semibold text-ink">{{ i18n.t().board.followUpsHeading }}</h2>
           <span class="rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted tabular-nums">
             {{ followUps().length }}
           </span>
@@ -127,11 +127,11 @@
             <button
               type="button"
               class="btn btn-ghost shrink-0 px-2 py-1 text-xs"
-              title="Mark follow-up as done"
+              [attr.title]="i18n.t().board.markDoneTitle"
               (click)="completeFollowUp(item.application, $event)"
             >
               <app-icon name="check" [size]="14" />
-              Done
+              {{ i18n.t().board.done }}
             </button>
           </div>
         }
@@ -142,8 +142,8 @@
   @if (applications.error()) {
     <div class="mt-6 flex items-center gap-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
       <app-icon name="alert" [size]="18" />
-      Couldn't reach the API. Make sure it's running, then
-      <button type="button" class="font-medium underline underline-offset-2" (click)="applications.reload()">try again</button>.
+      {{ i18n.t().board.apiError }}
+      <button type="button" class="font-medium underline underline-offset-2" (click)="applications.reload()">{{ i18n.t().board.tryAgain }}</button>.
     </div>
   }
 
@@ -157,13 +157,13 @@
         <div class="flex items-center justify-between px-4 pt-3 pb-2">
           <div class="flex items-center gap-2">
             <span class="size-2.5 rounded-full" [class]="meta[column.status].dot"></span>
-            <h2 class="text-sm font-semibold text-ink">{{ meta[column.status].label }}</h2>
+            <h2 class="text-sm font-semibold text-ink">{{ i18n.t().stages[column.status] }}</h2>
             <span class="rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-ink-muted tabular-nums">
               {{ column.items.length }}
             </span>
           </div>
           <button type="button" class="btn btn-ghost size-7 p-0" (click)="open({ status: column.status })"
-                  [attr.aria-label]="'Add to ' + meta[column.status].label">
+                  [attr.aria-label]="'Add to ' + i18n.t().stages[column.status]">
             <app-icon name="plus" />
           </button>
         </div>
@@ -201,8 +201,26 @@
                 <p class="mt-2.5 line-clamp-2 text-xs leading-relaxed text-ink-muted">{{ application.notes }}</p>
               }
 
-              @if (application.contactName || application.followUpOn) {
+              @if (application.contactName || application.followUpOn || application.resumeVersion || application.coverLetterVersion) {
                 <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
+                  @if (application.resumeVersion) {
+                    <span
+                      class="inline-flex max-w-full items-center gap-1 truncate rounded-md border border-line bg-surface-muted/70 px-2 py-0.5 text-[11px] text-ink-muted"
+                      [title]="'Résumé: ' + application.resumeVersion"
+                    >
+                      <app-icon name="notes" [size]="11" />
+                      <span class="truncate">{{ application.resumeVersion }}</span>
+                    </span>
+                  }
+                  @if (application.coverLetterVersion) {
+                    <span
+                      class="inline-flex max-w-full items-center gap-1 truncate rounded-md border border-line bg-surface-muted/70 px-2 py-0.5 text-[11px] text-ink-muted"
+                      [title]="'Cover letter: ' + application.coverLetterVersion"
+                    >
+                      <app-icon name="notes" [size]="11" />
+                      <span class="truncate">{{ application.coverLetterVersion }}</span>
+                    </span>
+                  }
                   @if (application.contactName) {
                     <span
                       class="inline-flex max-w-full items-center gap-1 truncate rounded-md border border-line bg-surface-muted/70 px-2 py-0.5 text-[11px] text-ink-muted"
@@ -243,13 +261,13 @@
                     {{ application.appliedOn | date: 'MMM d' }}
                   </span>
                 } @else {
-                  <span>Added {{ application.createdAt | date: 'MMM d' }}</span>
+                  <span>{{ i18n.t().board.addedPrefix }} {{ application.createdAt | date: 'MMM d' }}</span>
                 }
                 @if (application.jobUrl) {
                   <a [href]="application.jobUrl" target="_blank" rel="noopener"
                      class="ml-auto inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 hover:bg-brand-soft hover:text-brand"
                      (click)="$event.stopPropagation()">
-                    <app-icon name="link" [size]="13" /> Posting
+                    <app-icon name="link" [size]="13" /> {{ i18n.t().board.postingLink }}
                   </a>
                 }
               </div>
@@ -258,7 +276,7 @@
             </article>
           } @empty {
             <div class="grid flex-1 place-items-center rounded-xl border-2 border-dashed border-line p-6 text-center">
-              <p class="text-xs text-ink-faint">Drop a card here</p>
+              <p class="text-xs text-ink-faint">{{ i18n.t().board.dropCardHere }}</p>
             </div>
           }
         </div>

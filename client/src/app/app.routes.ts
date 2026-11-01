@@ -1,7 +1,15 @@
 import { Routes } from '@angular/router';
-import { ApplicationsBoard } from './applications/applications-board';
 
 export const routes: Routes = [
-  { path: '', component: ApplicationsBoard, title: 'Job Application Tracker' },
+  {
+    path: '',
+    loadComponent: () => import('./applications/applications-board').then((m) => m.ApplicationsBoard),
+    title: 'Job Application Tracker',
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard').then((m) => m.Dashboard),
+    title: 'Dashboard · Job Application Tracker',
+  },
   { path: '**', redirectTo: '' },
 ];
