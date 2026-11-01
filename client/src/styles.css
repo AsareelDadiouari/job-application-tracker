@@ -1,0 +1,89 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+@import '@angular/cdk/overlay-prebuilt.css';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f6;
+  --color-line: #e3e6ef;
+  --color-ink: #121826;
+  --color-ink-muted: #5b6478;
+  --color-ink-faint: #8f97aa;
+  --color-brand: #5b4cf0;
+  --color-brand-strong: #4636d6;
+  --color-brand-soft: #ecebff;
+}
+
+@layer base {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-canvas: #0d1017;
+      --color-surface: #161a24;
+      --color-surface-muted: #1c2130;
+      --color-line: #262c3d;
+      --color-ink: #eef0f6;
+      --color-ink-muted: #a3abbf;
+      --color-ink-faint: #6b7489;
+      --color-brand: #7c6ff7;
+      --color-brand-strong: #9488ff;
+      --color-brand-soft: #241f4d;
+    }
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-brand text-white shadow-sm shadow-brand/30 hover:bg-brand-strong;
+  }
+
+  .btn-ghost {
+    @apply text-ink-muted hover:bg-surface-muted hover:text-ink;
+  }
+
+  .btn-danger {
+    @apply text-red-600 hover:bg-red-500/10 dark:text-red-400;
+  }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-faint
+      transition outline-none focus:border-brand focus:ring-3 focus:ring-brand/20;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-medium text-ink-muted;
+  }
+}
+
+/* Drag and drop (Angular CDK) */
+.cdk-drag-preview {
+  @apply rotate-2 rounded-xl shadow-2xl shadow-black/20;
+}
+
+.cdk-drag-placeholder {
+  @apply opacity-40;
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-overlay-dark-backdrop {
+  @apply bg-slate-950/60 backdrop-blur-sm;
+}
