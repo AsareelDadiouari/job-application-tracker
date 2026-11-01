@@ -56,6 +56,46 @@ public class ApplicationEndpointsTests(ApiFactory factory) : IClassFixture<ApiFa
     }
 
     [Fact]
+    public async Task Follow_up_reminder_and_contact_details_are_saved_and_cleared()
+    {
+        var followUpDate = new DateOnly(2026, 11, 10);
+        var request = new ApplicationRequest(
+            Company: "Globex",
+            Position: "Platform Engineer",
+            Status: ApplicationStatus.Interview,
+            JobUrl: "https://globex.example/jobs/1",
+            Notes: "Great first call",
+            AppliedOn: new DateOnly(2026, 11, 1),
+            FollowUpOn: followUpDate,
+            FollowUpNote: "Send thank-you email to Sarah",
+            ContactName: "Sarah Jenkins",
+            ContactEmail: "sarah@globex.example",
+            ContactRole: "Technical Recruiter");
+
+        var created = await _client.PostAsJsonAsync("/api/applications", request, Json);
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var saved = await created.Content.ReadFromJsonAsync<JobApplication>(Json);
+
+        Assert.NotNull(saved);
+        Assert.Equal(followUpDate, saved.FollowUpOn);
+        Assert.Equal("Send thank-you email to Sarah", saved.FollowUpNote);
+        Assert.Equal("Sarah Jenkins", saved.ContactName);
+        Assert.Equal("sarah@globex.example", saved.ContactEmail);
+        Assert.Equal("Technical Recruiter", saved.ContactRole);
+
+        var cleared = await _client.PutAsJsonAsync(
+            $"/api/applications/{saved.Id}",
+            request with { FollowUpOn = null, FollowUpNote = null },
+            Json);
+        Assert.Equal(HttpStatusCode.OK, cleared.StatusCode);
+
+        var fetched = await _client.GetFromJsonAsync<JobApplication>($"/api/applications/{saved.Id}", Json);
+        Assert.Null(fetched!.FollowUpOn);
+        Assert.Null(fetched.FollowUpNote);
+        Assert.Equal("Sarah Jenkins", fetched.ContactName);
+    }
+
+    [Fact]
     public async Task Missing_company_is_rejected()
     {
         var response = await _client.PostAsJsonAsync(

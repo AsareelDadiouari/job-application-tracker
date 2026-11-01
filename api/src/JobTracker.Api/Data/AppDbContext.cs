@@ -15,8 +15,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(a => a.Company).HasMaxLength(200);
             entity.Property(a => a.Position).HasMaxLength(200);
             entity.Property(a => a.JobUrl).HasMaxLength(2048);
+            entity.Property(a => a.FollowUpNote).HasMaxLength(500);
+            entity.Property(a => a.ContactName).HasMaxLength(200);
+            entity.Property(a => a.ContactEmail).HasMaxLength(320);
+            entity.Property(a => a.ContactRole).HasMaxLength(200);
             entity.Property(a => a.Status).HasConversion<string>().HasMaxLength(20);
             entity.HasIndex(a => a.Status);
+            entity.HasIndex(a => a.FollowUpOn);
         });
     }
 }

@@ -1,0 +1,145 @@
+<form
+  class="flex max-h-[90vh] w-[min(36rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl"
+  (ngSubmit)="save()"
+>
+  <header class="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
+    <div>
+      <h2 class="text-lg font-semibold text-ink">{{ isEdit ? 'Edit application' : 'New application' }}</h2>
+      <p class="mt-0.5 text-sm text-ink-muted">
+        {{ isEdit ? 'Update the details or move it to another stage.' : 'Track a role you want or have applied to.' }}
+      </p>
+    </div>
+    <button type="button" class="btn btn-ghost -mr-2 px-2" (click)="close()" aria-label="Close">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </header>
+
+  <div class="grid gap-4 overflow-y-auto px-6 py-5 sm:grid-cols-2">
+    <div>
+      <label class="label" for="company">Company</label>
+      <input id="company" name="company" class="field" placeholder="Acme Inc." required cdkFocusInitial
+             [(ngModel)]="company" />
+    </div>
+    <div>
+      <label class="label" for="position">Position</label>
+      <input id="position" name="position" class="field" placeholder="Backend Developer" required
+             [(ngModel)]="position" />
+    </div>
+
+    <fieldset class="sm:col-span-2">
+      <legend class="label">Stage</legend>
+      <div class="flex flex-wrap gap-2">
+        @for (s of statuses; track s) {
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition"
+            [class]="status() === s ? 'border-brand bg-brand-soft text-ink font-medium' : 'border-line text-ink-muted hover:border-ink-faint'"
+          >
+            <input type="radio" name="status" class="sr-only" [value]="s" [(ngModel)]="status" />
+            <span class="size-2 rounded-full" [class]="meta[s].dot"></span>
+            {{ meta[s].label }}
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <div>
+      <label class="label" for="jobUrl">Job posting link</label>
+      <input id="jobUrl" name="jobUrl" type="url" class="field" placeholder="https://…" [(ngModel)]="jobUrl" />
+    </div>
+    <div>
+      <label class="label" for="appliedOn">Applied on</label>
+      <input id="appliedOn" name="appliedOn" type="date" class="field" [(ngModel)]="appliedOn" />
+    </div>
+
+    <!-- Contact / Recruiter section -->
+    <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
+      <div class="mb-2.5 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
+        <app-icon name="user" [size]="14" />
+        <span>Contact / Recruiter</span>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div>
+          <label class="label" for="contactName">Name</label>
+          <input id="contactName" name="contactName" class="field" placeholder="Sarah Jenkins"
+                 [(ngModel)]="contactName" />
+        </div>
+        <div>
+          <label class="label" for="contactRole">Role</label>
+          <input id="contactRole" name="contactRole" class="field" placeholder="Technical Recruiter"
+                 [(ngModel)]="contactRole" />
+        </div>
+        <div>
+          <label class="label" for="contactEmail">Email</label>
+          <input id="contactEmail" name="contactEmail" type="email" class="field" placeholder="sarah@acme.com"
+                 [(ngModel)]="contactEmail" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow-up reminder section -->
+    <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
+      <div class="mb-2.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
+          <app-icon name="bell" [size]="14" />
+          <span>Follow-up reminder</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1">
+          @for (preset of followUpPresets; track preset.days) {
+            <button
+              type="button"
+              class="rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-medium text-ink-muted transition hover:border-brand hover:text-brand"
+              (click)="setFollowUpDays(preset.days)"
+            >
+              {{ preset.label }}
+            </button>
+          }
+          @if (followUpOn()) {
+            <button
+              type="button"
+              class="rounded-md px-2 py-0.5 text-xs font-medium text-rose-600 transition hover:bg-rose-500/10 dark:text-rose-400"
+              (click)="setFollowUpDays(null)"
+            >
+              Clear
+            </button>
+          }
+        </div>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-5">
+        <div class="sm:col-span-2">
+          <label class="label" for="followUpOn">Remind on</label>
+          <input id="followUpOn" name="followUpOn" type="date" class="field" [(ngModel)]="followUpOn" />
+        </div>
+        <div class="sm:col-span-3">
+          <label class="label" for="followUpNote">Reminder note</label>
+          <input id="followUpNote" name="followUpNote" class="field"
+                 placeholder="Send thank-you email, check in on interview…"
+                 [(ngModel)]="followUpNote" />
+        </div>
+      </div>
+    </div>
+
+    <div class="sm:col-span-2">
+      <label class="label" for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="3" class="field resize-y"
+                placeholder="Salary range, tech stack, what you learned in the interview…"
+                [(ngModel)]="notes"></textarea>
+    </div>
+  </div>
+
+  <footer class="flex items-center justify-between gap-3 border-t border-line bg-surface-muted/50 px-6 py-4">
+    @if (isEdit) {
+      <button type="button" class="btn btn-danger" (click)="delete()">
+        <app-icon name="trash" />
+        {{ confirmingDelete() ? 'Click again to delete' : 'Delete' }}
+      </button>
+    } @else {
+      <span></span>
+    }
+    <div class="flex gap-2">
+      <button type="button" class="btn btn-ghost" (click)="close()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!company().trim() || !position().trim()">
+        {{ isEdit ? 'Save changes' : 'Add application' }}
+      </button>
+    </div>
+  </footer>
+</form>

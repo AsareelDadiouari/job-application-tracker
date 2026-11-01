@@ -18,6 +18,11 @@ public class JobApplication
     public string? JobUrl { get; set; }
     public string? Notes { get; set; }
     public DateOnly? AppliedOn { get; set; }
+    public DateOnly? FollowUpOn { get; set; }
+    public string? FollowUpNote { get; set; }
+    public string? ContactName { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactRole { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

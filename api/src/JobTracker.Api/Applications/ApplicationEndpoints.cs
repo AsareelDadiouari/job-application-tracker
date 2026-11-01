@@ -10,7 +10,12 @@ public record ApplicationRequest(
     ApplicationStatus Status,
     [property: MaxLength(2048)] string? JobUrl,
     string? Notes,
-    DateOnly? AppliedOn);
+    DateOnly? AppliedOn,
+    DateOnly? FollowUpOn = null,
+    [property: MaxLength(500)] string? FollowUpNote = null,
+    [property: MaxLength(200)] string? ContactName = null,
+    [property: MaxLength(320)] string? ContactEmail = null,
+    [property: MaxLength(200)] string? ContactRole = null);
 
 public static class ApplicationEndpoints
 {
@@ -71,6 +76,11 @@ public static class ApplicationEndpoints
         application.JobUrl = request.JobUrl;
         application.Notes = request.Notes;
         application.AppliedOn = request.AppliedOn;
+        application.FollowUpOn = request.FollowUpOn;
+        application.FollowUpNote = request.FollowUpNote;
+        application.ContactName = request.ContactName;
+        application.ContactEmail = request.ContactEmail;
+        application.ContactRole = request.ContactRole;
         application.UpdatedAt = now;
     }
 }

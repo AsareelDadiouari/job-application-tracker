@@ -13,13 +13,28 @@ export interface JobApplication {
   jobUrl: string | null;
   notes: string | null;
   appliedOn: string | null;
+  followUpOn: string | null;
+  followUpNote: string | null;
+  contactName: string | null;
+  contactEmail: string | null;
+  contactRole: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export type ApplicationRequest = Pick<
   JobApplication,
-  'company' | 'position' | 'status' | 'jobUrl' | 'notes' | 'appliedOn'
+  | 'company'
+  | 'position'
+  | 'status'
+  | 'jobUrl'
+  | 'notes'
+  | 'appliedOn'
+  | 'followUpOn'
+  | 'followUpNote'
+  | 'contactName'
+  | 'contactEmail'
+  | 'contactRole'
 >;
 
 @Injectable({ providedIn: 'root' })
