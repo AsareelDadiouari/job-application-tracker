@@ -4,9 +4,9 @@
 >
   <header class="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
     <div>
-      <h2 class="text-lg font-semibold text-ink">{{ isEdit ? 'Edit application' : 'New application' }}</h2>
+      <h2 class="text-lg font-semibold text-ink">{{ isEdit ? i18n.t().dialog.editTitle : i18n.t().dialog.newTitle }}</h2>
       <p class="mt-0.5 text-sm text-ink-muted">
-        {{ isEdit ? 'Update the details or move it to another stage.' : 'Track a role you want or have applied to.' }}
+        {{ isEdit ? i18n.t().dialog.editSubtitle : i18n.t().dialog.newSubtitle }}
       </p>
     </div>
     <button type="button" class="btn btn-ghost -mr-2 px-2" (click)="close()" aria-label="Close">
@@ -16,18 +16,18 @@
 
   <div class="grid gap-4 overflow-y-auto px-6 py-5 sm:grid-cols-2">
     <div>
-      <label class="label" for="company">Company</label>
+      <label class="label" for="company">{{ i18n.t().dialog.company }}</label>
       <input id="company" name="company" class="field" placeholder="Acme Inc." required cdkFocusInitial
              [(ngModel)]="company" />
     </div>
     <div>
-      <label class="label" for="position">Position</label>
+      <label class="label" for="position">{{ i18n.t().dialog.position }}</label>
       <input id="position" name="position" class="field" placeholder="Backend Developer" required
              [(ngModel)]="position" />
     </div>
 
     <fieldset class="sm:col-span-2">
-      <legend class="label">Stage</legend>
+      <legend class="label">{{ i18n.t().dialog.stage }}</legend>
       <div class="flex flex-wrap gap-2">
         @for (s of statuses; track s) {
           <label
@@ -36,18 +36,18 @@
           >
             <input type="radio" name="status" class="sr-only" [value]="s" [(ngModel)]="status" />
             <span class="size-2 rounded-full" [class]="meta[s].dot"></span>
-            {{ meta[s].label }}
+            {{ i18n.t().stages[s] }}
           </label>
         }
       </div>
     </fieldset>
 
     <div>
-      <label class="label" for="jobUrl">Job posting link</label>
+      <label class="label" for="jobUrl">{{ i18n.t().dialog.jobUrl }}</label>
       <input id="jobUrl" name="jobUrl" type="url" class="field" placeholder="https://…" [(ngModel)]="jobUrl" />
     </div>
     <div>
-      <label class="label" for="appliedOn">Applied on</label>
+      <label class="label" for="appliedOn">{{ i18n.t().dialog.appliedOn }}</label>
       <input id="appliedOn" name="appliedOn" type="date" class="field" [(ngModel)]="appliedOn" />
     </div>
 
@@ -55,13 +55,13 @@
     <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
       <div class="mb-2.5 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
         <app-icon name="notes" [size]="14" />
-        <span>Documents sent</span>
+        <span>{{ i18n.t().dialog.documentsHeading }}</span>
       </div>
       <div class="grid gap-3 sm:grid-cols-2">
         <div>
-          <label class="label" for="resumeVersion">Résumé version</label>
+          <label class="label" for="resumeVersion">{{ i18n.t().dialog.resumeVersion }}</label>
           <input id="resumeVersion" name="resumeVersion" list="resume-versions-list" class="field"
-                 placeholder="e.g. Backend-v3-EN.pdf" [(ngModel)]="resumeVersion" />
+                 [placeholder]="i18n.t().dialog.resumePlaceholder" [(ngModel)]="resumeVersion" />
           <datalist id="resume-versions-list">
             @for (v of data.resumeVersions ?? []; track v) {
               <option [value]="v"></option>
@@ -69,9 +69,9 @@
           </datalist>
         </div>
         <div>
-          <label class="label" for="coverLetterVersion">Cover letter</label>
+          <label class="label" for="coverLetterVersion">{{ i18n.t().dialog.coverLetterVersion }}</label>
           <input id="coverLetterVersion" name="coverLetterVersion" list="cover-letter-versions-list" class="field"
-                 placeholder="e.g. Tailored - Cloud Platform" [(ngModel)]="coverLetterVersion" />
+                 [placeholder]="i18n.t().dialog.coverLetterPlaceholder" [(ngModel)]="coverLetterVersion" />
           <datalist id="cover-letter-versions-list">
             @for (v of data.coverLetterVersions ?? []; track v) {
               <option [value]="v"></option>
@@ -85,21 +85,21 @@
     <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
       <div class="mb-2.5 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
         <app-icon name="user" [size]="14" />
-        <span>Contact / Recruiter</span>
+        <span>{{ i18n.t().dialog.contactHeading }}</span>
       </div>
       <div class="grid gap-3 sm:grid-cols-3">
         <div>
-          <label class="label" for="contactName">Name</label>
+          <label class="label" for="contactName">{{ i18n.t().dialog.contactName }}</label>
           <input id="contactName" name="contactName" class="field" placeholder="Sarah Jenkins"
                  [(ngModel)]="contactName" />
         </div>
         <div>
-          <label class="label" for="contactRole">Role</label>
+          <label class="label" for="contactRole">{{ i18n.t().dialog.contactRole }}</label>
           <input id="contactRole" name="contactRole" class="field" placeholder="Technical Recruiter"
                  [(ngModel)]="contactRole" />
         </div>
         <div>
-          <label class="label" for="contactEmail">Email</label>
+          <label class="label" for="contactEmail">{{ i18n.t().dialog.contactEmail }}</label>
           <input id="contactEmail" name="contactEmail" type="email" class="field" placeholder="sarah@acme.com"
                  [(ngModel)]="contactEmail" />
         </div>
@@ -111,10 +111,10 @@
       <div class="mb-2.5 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
           <app-icon name="bell" [size]="14" />
-          <span>Follow-up reminder</span>
+          <span>{{ i18n.t().dialog.followUpHeading }}</span>
         </div>
         <div class="flex flex-wrap items-center gap-1">
-          @for (preset of followUpPresets; track preset.days) {
+          @for (preset of followUpPresets(); track preset.days) {
             <button
               type="button"
               class="rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-medium text-ink-muted transition hover:border-brand hover:text-brand"
@@ -129,29 +129,29 @@
               class="rounded-md px-2 py-0.5 text-xs font-medium text-rose-600 transition hover:bg-rose-500/10 dark:text-rose-400"
               (click)="setFollowUpDays(null)"
             >
-              Clear
+              {{ i18n.t().dialog.presets.clear }}
             </button>
           }
         </div>
       </div>
       <div class="grid gap-3 sm:grid-cols-5">
         <div class="sm:col-span-2">
-          <label class="label" for="followUpOn">Remind on</label>
+          <label class="label" for="followUpOn">{{ i18n.t().dialog.remindOn }}</label>
           <input id="followUpOn" name="followUpOn" type="date" class="field" [(ngModel)]="followUpOn" />
         </div>
         <div class="sm:col-span-3">
-          <label class="label" for="followUpNote">Reminder note</label>
+          <label class="label" for="followUpNote">{{ i18n.t().dialog.reminderNote }}</label>
           <input id="followUpNote" name="followUpNote" class="field"
-                 placeholder="Send thank-you email, check in on interview…"
+                 [placeholder]="i18n.t().dialog.reminderPlaceholder"
                  [(ngModel)]="followUpNote" />
         </div>
       </div>
     </div>
 
     <div class="sm:col-span-2">
-      <label class="label" for="notes">Notes</label>
+      <label class="label" for="notes">{{ i18n.t().dialog.notes }}</label>
       <textarea id="notes" name="notes" rows="3" class="field resize-y"
-                placeholder="Salary range, tech stack, what you learned in the interview…"
+                [placeholder]="i18n.t().dialog.notesPlaceholder"
                 [(ngModel)]="notes"></textarea>
     </div>
   </div>
@@ -160,15 +160,15 @@
     @if (isEdit) {
       <button type="button" class="btn btn-danger" (click)="delete()">
         <app-icon name="trash" />
-        {{ confirmingDelete() ? 'Click again to delete' : 'Delete' }}
+        {{ confirmingDelete() ? i18n.t().dialog.confirmDelete : i18n.t().dialog.delete }}
       </button>
     } @else {
       <span></span>
     }
     <div class="flex gap-2">
-      <button type="button" class="btn btn-ghost" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn-ghost" (click)="close()">{{ i18n.t().dialog.cancel }}</button>
       <button type="submit" class="btn btn-primary" [disabled]="!company().trim() || !position().trim()">
-        {{ isEdit ? 'Save changes' : 'Add application' }}
+        {{ isEdit ? i18n.t().dialog.saveChanges : i18n.t().dialog.addApplication }}
       </button>
     </div>
   </footer>

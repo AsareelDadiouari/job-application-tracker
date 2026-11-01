@@ -1,12 +1,12 @@
 <section class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-semibold tracking-tight text-ink">Pipeline analytics</h1>
-      <p class="mt-1 text-sm text-ink-muted">Response rates, funnel conversion, and where applications stall.</p>
+      <h1 class="text-2xl font-semibold tracking-tight text-ink">{{ i18n.t().dashboard.title }}</h1>
+      <p class="mt-1 text-sm text-ink-muted">{{ i18n.t().dashboard.subtitle }}</p>
     </div>
     <a routerLink="/" class="btn btn-ghost border border-line">
       <app-icon name="board" />
-      <span>Back to board</span>
+      <span>{{ i18n.t().dashboard.backToBoard }}</span>
     </a>
   </div>
 
@@ -32,8 +32,8 @@
     <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-3">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-base font-semibold text-ink">Stage distribution</h2>
-          <p class="text-xs text-ink-muted">Breakdown of applications across every pipeline stage</p>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.stageDistributionTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.stageDistributionSubtitle }}</p>
         </div>
         <app-icon name="chart" [size]="18" />
       </div>
@@ -65,30 +65,30 @@
 
     <!-- Funnel Conversion Rates -->
     <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-2">
-      <h2 class="text-base font-semibold text-ink">Where applications bottleneck</h2>
-      <p class="text-xs text-ink-muted">Conversion and stall rates across your submitted applications</p>
+      <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.bottlenecksTitle }}</h2>
+      <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.bottlenecksSubtitle }}</p>
 
       @let conv = conversions();
       <div class="mt-5 grid grid-cols-2 gap-3">
         <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
-          <div class="text-xs text-ink-muted">Applied → Interview</div>
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.appliedToInterview }}</div>
           <div class="mt-1 text-2xl font-semibold text-ink tabular-nums">{{ conv.appliedToInterview }}%</div>
-          <div class="mt-0.5 text-[11px] text-ink-faint">Reach interview stage</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.appliedToInterviewHint }}</div>
         </div>
         <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
-          <div class="text-xs text-ink-muted">Interview → Offer</div>
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.interviewToOffer }}</div>
           <div class="mt-1 text-2xl font-semibold text-emerald-500 tabular-nums">{{ conv.interviewToOffer }}%</div>
-          <div class="mt-0.5 text-[11px] text-ink-faint">Close into an offer</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.interviewToOfferHint }}</div>
         </div>
         <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
-          <div class="text-xs text-ink-muted">Awaiting reply</div>
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.awaitingReply }}</div>
           <div class="mt-1 text-2xl font-semibold text-amber-500 tabular-nums">{{ conv.awaitingReplyRate }}%</div>
-          <div class="mt-0.5 text-[11px] text-ink-faint">Still in Applied stage</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.awaitingReplyHint }}</div>
         </div>
         <div class="rounded-xl border border-line bg-surface-muted/40 p-3.5">
-          <div class="text-xs text-ink-muted">Rejection rate</div>
+          <div class="text-xs text-ink-muted">{{ i18n.t().dashboard.rejectionRate }}</div>
           <div class="mt-1 text-2xl font-semibold text-rose-500 tabular-nums">{{ conv.rejectionRate }}%</div>
-          <div class="mt-0.5 text-[11px] text-ink-faint">Closed as Rejected</div>
+          <div class="mt-0.5 text-[11px] text-ink-faint">{{ i18n.t().dashboard.rejectionRateHint }}</div>
         </div>
       </div>
     </div>
@@ -100,8 +100,8 @@
     <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-3">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-base font-semibold text-ink">Stalled applications (14+ days)</h2>
-          <p class="text-xs text-ink-muted">Roles in Applied or Interview that may need a follow-up or closure</p>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.stalledTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.stalledSubtitle }}</p>
         </div>
         <span class="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-600 tabular-nums dark:text-amber-300">
           {{ stalledApplications().length }}
@@ -122,31 +122,31 @@
                 <div class="flex items-center gap-2">
                   <span class="truncate text-sm font-semibold text-ink">{{ item.application.position }}</span>
                   <span class="rounded-full bg-surface-muted px-2 py-0.5 text-[11px] font-medium text-ink-muted">
-                    {{ meta[item.application.status].label }}
+                    {{ i18n.t().stages[item.application.status] }}
                   </span>
                 </div>
                 <p class="truncate text-xs text-ink-muted">
                   {{ item.application.company }} · {{ item.reason }}
                   @if (item.application.contactName) {
-                    · Contact: {{ item.application.contactName }}
+                    · {{ item.application.contactName }}
                   }
                 </p>
               </div>
             </div>
             <div class="shrink-0 text-right">
               <span class="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-600 tabular-nums dark:text-amber-300">
-                {{ item.daysStalled }}d stalled
+                {{ i18n.t().dashboard.stalledBadge(item.daysStalled) }}
               </span>
               @if (item.application.appliedOn) {
                 <div class="mt-1 text-[11px] text-ink-faint">
-                  Applied {{ item.application.appliedOn | date: 'MMM d' }}
+                  {{ item.application.appliedOn | date: 'MMM d' }}
                 </div>
               }
             </div>
           </div>
         } @empty {
           <div class="rounded-xl border border-dashed border-line p-6 text-center text-xs text-ink-faint">
-            No stalled applications — your pipeline is moving smoothly!
+            {{ i18n.t().dashboard.noStalled }}
           </div>
         }
       </div>
@@ -156,8 +156,8 @@
     <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-black/[0.03] lg:col-span-2">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-base font-semibold text-ink">Résumé performance</h2>
-          <p class="text-xs text-ink-muted">Response rate by résumé version sent</p>
+          <h2 class="text-base font-semibold text-ink">{{ i18n.t().dashboard.resumeTitle }}</h2>
+          <p class="text-xs text-ink-muted">{{ i18n.t().dashboard.resumeSubtitle }}</p>
         </div>
         <app-icon name="notes" [size]="18" />
       </div>
@@ -168,16 +168,16 @@
             <div class="flex items-center justify-between gap-2">
               <span class="truncate text-sm font-medium text-ink">{{ doc.version }}</span>
               <span class="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand tabular-nums">
-                {{ doc.responseRate }}% response
+                {{ i18n.t().dashboard.responseBadge(doc.responseRate) }}
               </span>
             </div>
             <div class="mt-1 text-xs text-ink-muted tabular-nums">
-              {{ doc.responded }} of {{ doc.sent }} application{{ doc.sent === 1 ? '' : 's' }} reached interview/offer
+              {{ i18n.t().dashboard.resumeSummary(doc.responded, doc.sent) }}
             </div>
           </div>
         } @empty {
           <div class="rounded-xl border border-dashed border-line p-6 text-center text-xs text-ink-faint">
-            Add a résumé version when creating or editing applications to compare response rates here.
+            {{ i18n.t().dashboard.noResumeData }}
           </div>
         }
       </div>

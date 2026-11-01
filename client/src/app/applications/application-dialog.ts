@@ -1,6 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { I18nService } from '../shared/i18n';
 import { Icon } from '../shared/icon';
 import { APPLICATION_STATUSES, ApplicationRequest, ApplicationStatus, JobApplication } from './applications.service';
 import { STATUS_META } from './status';
@@ -23,6 +24,7 @@ export type ApplicationDialogResult = { action: 'save'; request: ApplicationRequ
 export class ApplicationDialog {
   private readonly dialogRef = inject<DialogRef<ApplicationDialogResult>>(DialogRef);
   protected readonly data = inject<ApplicationDialogData>(DIALOG_DATA);
+  protected readonly i18n = inject(I18nService);
 
   protected readonly statuses = APPLICATION_STATUSES;
   protected readonly meta = STATUS_META;
@@ -45,12 +47,15 @@ export class ApplicationDialog {
   protected readonly notes = signal(this.data.application?.notes ?? '');
   protected readonly confirmingDelete = signal(false);
 
-  protected readonly followUpPresets = [
-    { label: 'Tomorrow', days: 1 },
-    { label: '+3 days', days: 3 },
-    { label: '+1 week', days: 7 },
-    { label: '+2 weeks', days: 14 },
-  ] as const;
+  protected readonly followUpPresets = computed(() => {
+    const p = this.i18n.t().dialog.presets;
+    return [
+      { label: p.tomorrow, days: 1 },
+      { label: p.in3Days, days: 3 },
+      { label: p.in1Week, days: 7 },
+      { label: p.in2Weeks, days: 14 },
+    ] as const;
+  });
 
   protected setFollowUpDays(days: number | null) {
     if (days === null) {
