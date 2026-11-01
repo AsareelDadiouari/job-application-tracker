@@ -96,6 +96,28 @@ public class ApplicationEndpointsTests(ApiFactory factory) : IClassFixture<ApiFa
     }
 
     [Fact]
+    public async Task Document_versions_are_tracked_per_application()
+    {
+        var request = new ApplicationRequest(
+            Company: "Initech",
+            Position: "Full-Stack Developer",
+            Status: ApplicationStatus.Applied,
+            JobUrl: null,
+            Notes: null,
+            AppliedOn: new DateOnly(2026, 11, 1),
+            ResumeVersion: "Resume-Backend-v3-EN.pdf",
+            CoverLetterVersion: "CoverLetter-Initech.pdf");
+
+        var created = await _client.PostAsJsonAsync("/api/applications", request, Json);
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var saved = await created.Content.ReadFromJsonAsync<JobApplication>(Json);
+
+        Assert.NotNull(saved);
+        Assert.Equal("Resume-Backend-v3-EN.pdf", saved.ResumeVersion);
+        Assert.Equal("CoverLetter-Initech.pdf", saved.CoverLetterVersion);
+    }
+
+    [Fact]
     public async Task Missing_company_is_rejected()
     {
         var response = await _client.PostAsJsonAsync(

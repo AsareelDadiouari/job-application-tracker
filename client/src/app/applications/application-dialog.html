@@ -51,6 +51,36 @@
       <input id="appliedOn" name="appliedOn" type="date" class="field" [(ngModel)]="appliedOn" />
     </div>
 
+    <!-- Documents sent section -->
+    <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
+      <div class="mb-2.5 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">
+        <app-icon name="notes" [size]="14" />
+        <span>Documents sent</span>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label class="label" for="resumeVersion">Résumé version</label>
+          <input id="resumeVersion" name="resumeVersion" list="resume-versions-list" class="field"
+                 placeholder="e.g. Backend-v3-EN.pdf" [(ngModel)]="resumeVersion" />
+          <datalist id="resume-versions-list">
+            @for (v of data.resumeVersions ?? []; track v) {
+              <option [value]="v"></option>
+            }
+          </datalist>
+        </div>
+        <div>
+          <label class="label" for="coverLetterVersion">Cover letter</label>
+          <input id="coverLetterVersion" name="coverLetterVersion" list="cover-letter-versions-list" class="field"
+                 placeholder="e.g. Tailored - Cloud Platform" [(ngModel)]="coverLetterVersion" />
+          <datalist id="cover-letter-versions-list">
+            @for (v of data.coverLetterVersions ?? []; track v) {
+              <option [value]="v"></option>
+            }
+          </datalist>
+        </div>
+      </div>
+    </div>
+
     <!-- Contact / Recruiter section -->
     <div class="sm:col-span-2 rounded-xl border border-line bg-surface-muted/40 p-3.5">
       <div class="mb-2.5 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-ink-muted uppercase">

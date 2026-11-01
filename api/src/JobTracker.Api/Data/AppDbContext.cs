@@ -19,6 +19,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(a => a.ContactName).HasMaxLength(200);
             entity.Property(a => a.ContactEmail).HasMaxLength(320);
             entity.Property(a => a.ContactRole).HasMaxLength(200);
+            entity.Property(a => a.ResumeVersion).HasMaxLength(200);
+            entity.Property(a => a.CoverLetterVersion).HasMaxLength(200);
             entity.Property(a => a.Status).HasConversion<string>().HasMaxLength(20);
             entity.HasIndex(a => a.Status);
             entity.HasIndex(a => a.FollowUpOn);
