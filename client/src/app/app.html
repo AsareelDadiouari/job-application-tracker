@@ -1,9 +1,31 @@
 <header class="sticky top-0 z-10 border-b border-line bg-surface/80 backdrop-blur-md">
-  <div class="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-4 sm:px-6 lg:px-8">
-    <div class="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-brand to-fuchsia-500 text-white shadow-md shadow-brand/30">
-      <app-icon name="briefcase" [size]="18" />
-    </div>
-    <span class="text-base font-semibold tracking-tight text-ink">Job Application Tracker</span>
+  <div class="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <a routerLink="/" class="flex items-center gap-3">
+      <div class="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-brand to-fuchsia-500 text-white shadow-md shadow-brand/30">
+        <app-icon name="briefcase" [size]="18" />
+      </div>
+      <span class="text-base font-semibold tracking-tight text-ink">Job Application Tracker</span>
+    </a>
+
+    <nav class="flex items-center gap-1 rounded-xl border border-line bg-surface-muted/60 p-1 text-sm font-medium" aria-label="Main navigation">
+      <a
+        routerLink="/"
+        routerLinkActive="bg-surface text-ink shadow-xs"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-ink-muted transition hover:text-ink"
+      >
+        <app-icon name="board" [size]="15" />
+        <span>Board</span>
+      </a>
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="bg-surface text-ink shadow-xs"
+        class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-ink-muted transition hover:text-ink"
+      >
+        <app-icon name="chart" [size]="15" />
+        <span>Dashboard</span>
+      </a>
+    </nav>
   </div>
 </header>
 <main>
